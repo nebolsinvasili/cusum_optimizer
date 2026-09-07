@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -O3 -march=native -fopenmp
+CXXFLAGS = -std=c++17 -Wall -Wextra -O3 -march=native -fopenmp -fPIC
 LDFLAGS = -fopenmp
 
 SRC_DIR = src
@@ -7,6 +7,8 @@ INCLUDE_DIR = include
 BUILD_DIR = build
 BIN_DIR = bin
 CONFIG_DIR = config
+LIB_DIR = lib
+SHARED_LIB = $(LIB_DIR)/libcusum.so
 
 TARGET = $(BIN_DIR)/cusum
 
@@ -16,7 +18,8 @@ SOURCES = \
     $(SRC_DIR)/main.cpp \
     $(SRC_DIR)/ProgressBar.cpp \
     $(SRC_DIR)/Simulator.cpp \
-    $(SRC_DIR)/Utils.cpp
+    $(SRC_DIR)/Utils.cpp \
+    $(SRC_DIR)/bridge.cpp
 
 OBJECTS = $(SOURCES:$(SRC_DIR)/%.cpp=$(BUILD_DIR)/%.o)
 HEADERS = $(wildcard $(INCLUDE_DIR)/*.hpp)
@@ -24,7 +27,7 @@ HEADERS = $(wildcard $(INCLUDE_DIR)/*.hpp)
 JSON_INCLUDE = /usr/include
 CXXFLAGS += -I$(INCLUDE_DIR) -I$(JSON_INCLUDE)
 
-.PHONY: all clean clean-results clean-logs clean-csv clean-all distclean help run run-config run-quick run-detailed debug validate test
+.PHONY: all clean clean-results clean-logs clean-csv clean-all distclean help run run-config run-quick run-detailed debug validate test lib
 
 all: $(TARGET)
 
@@ -42,6 +45,14 @@ $(BIN_DIR):
 
 $(BUILD_DIR):
 	@mkdir -p $(BUILD_DIR)
+
+$(SHARED_LIB): $(OBJECTS)
+	@mkdir -p $(LIB_DIR)
+	@echo "[LINK] Building shared library: $@"
+	$(CXX) -shared -fPIC -o $@ $^ $(LDFLAGS)
+	@echo "[OK] Shared library: $(SHARED_LIB)"
+
+lib: $(SHARED_LIB)
 
 # ============================================================================
 # RUN TARGETS
@@ -101,6 +112,7 @@ clean:
 	@echo "[CLEAN] Removing object files and executable..."
 	@rm -rf $(BUILD_DIR)/*.o $(BUILD_DIR)/*.d $(TARGET)
 	@rm -f $(BIN_DIR)/cusum_sn $(VALIDATE_BIN)
+	@rm -rf $(LIB_DIR)
 	@echo "[OK] Build clean complete"
 
 clean-results:
@@ -143,6 +155,7 @@ help:
 	@echo "Build targets:"
 	@echo "  make              - Build the main executable"
 	@echo "  make debug        - Build with debug symbols"
+	@echo "  make lib          - Build shared library for Python bindings"
 	@echo ""
 	@echo "Run targets:"
 	@echo "  make run          - Build and run the program"

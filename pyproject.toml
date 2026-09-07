@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cusum-optimizer"
+version = "1.0.0"
+description = "Python bindings for the CUSUM ARL optimizer (Monte-Carlo simulation)"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: C++",
+]
+
+[project.scripts]
+cusum = "cusum.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.setuptools.package-data]
+cusum = ["*.so", "*.dylib", "*.dll"]

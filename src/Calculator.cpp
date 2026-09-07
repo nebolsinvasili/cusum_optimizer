@@ -478,4 +478,8 @@ void Calculator::resume(const Config& config) {
     run(config);
 }
 
+const std::vector<ResultEntry>& Calculator::getResults() const {
+    return results_;
+}
+
 } // namespace cusum

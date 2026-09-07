@@ -34,6 +34,9 @@ public:
     /// Продолжает расчёт с контрольной точки (обёртка над run с resume=true).
     void resume(const Config& config);
 
+    /// Возвращает все накопленные результаты (для внешних API: bridge, Python).
+    const std::vector<ResultEntry>& getResults() const;
+
 private:
     /// Проверяет, была ли пара (k, H) уже посчитана (по ключу).
     bool isCombinationCompleted(double k, double H) const;

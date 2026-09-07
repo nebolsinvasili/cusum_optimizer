@@ -417,6 +417,26 @@ best2 = cusum2.best_pair()
 print(f"Уточнение: k={best2.k:.3f}, H={best2.H:.3f}, ARL={best2.ARL:.2f}")
 ```
 
+### Командная строка (`python -m cusum`)
+
+Пакет предоставляет CLI-обёртку (аналог C++ `bin/cusum`), устанавливаемую как консольная команда `cusum`:
+
+```bash
+# Через python -m (после pip install . или -e .)
+python -m cusum --simulations 1000 --n 10 \
+    --k_start 5.5 6.0 0.25 --H_start 3.5 4.0 0.25
+
+# Или как консольная команда после установки
+cusum --chart SR --simulations 1000 \
+    --k_start 1 3 0.5 --H_start 40 120 10 --json
+```
+
+Основные опции: `--chart SN|SR`, `--simulations N`, `--n N`, `--max_iter N`,
+`--target_ARL X`, `--cores N`, `--tolerance X`, `--top_n N`,
+`--k_start S E [step]`, `--H_start S E [step]`, `--config FILE` (JSON-конфиг,
+опции CLI переопределяют его), `--json` (вывод результата как JSON),
+`--keep-files` (не удалять CSV/log после запуска). Полный список: `cusum --help`.
+
 ### Make-цели для Python
 
 | Цель | Действие |
