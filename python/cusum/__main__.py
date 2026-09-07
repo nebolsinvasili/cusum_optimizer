@@ -5,10 +5,24 @@ Python-аналог C++ CLI: перебор сетки (k, H) и вывод лу
 import argparse
 import sys
 import os
-import tempfile
+import contextlib
 from typing import List, Optional, Tuple
 
 from . import Cusum, Config, Result
+
+
+@contextlib.contextmanager
+def _silent_stdout():
+    """Глушит stdout на уровне fd (ловит и C++ printf/ProgressBar)."""
+    saved = os.dup(1)
+    null_fd = os.open(os.devnull, os.O_WRONLY)
+    os.dup2(null_fd, 1)
+    try:
+        yield
+    finally:
+        os.dup2(saved, 1)
+        os.close(saved)
+        os.close(null_fd)
 
 
 def _parse_range(args: Optional[List[str]]) -> Optional[Tuple[float, float, float]]:
@@ -94,7 +108,11 @@ def main(argv: Optional[List[str]] = None) -> int:
     else:
         cusum = Cusum(config)
 
-    results = cusum.run()
+    if args.json:
+        with _silent_stdout():
+            results = cusum.run()
+    else:
+        results = cusum.run()
 
     if not results:
         sys.stderr.write("Нет результатов.\n")

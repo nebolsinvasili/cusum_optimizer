@@ -23,4 +23,3 @@ cusum = "cusum.__main__:main"
 
 [tool.poetry]
 packages = [{ include = "cusum", from = "python" }]
-include = ["python/cusum/*.so", "python/cusum/*.dll", "python/cusum/*.dylib"]
