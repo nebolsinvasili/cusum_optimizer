@@ -25,6 +25,7 @@ __pycache__/
 *.egg
 dist/
 build/
+.venv/
 *.so
 *.dylib
 *.dll

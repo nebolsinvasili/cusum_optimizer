@@ -264,6 +264,30 @@ cp lib/libcusum.so /usr/local/lib/
 pip install .
 ```
 
+**Через Poetry (альтернатива pip):**
+
+```bash
+# 1. Собрать shared library
+make lib
+
+# 2. Установить пакет (Poetry создаст venv .venv и запишет poetry.lock)
+poetry install
+
+# 3. Запуск консольной команды / скриптов
+poetry run cusum --help
+poetry run python -c "from cusum import Cusum, Config; e = Cusum(Config(simulations=1000, n=14)); print(e.calculate_arl(5.5, 4.5))"
+```
+
+Poetry собирает пакет через backend `poetry-core` (см. `pyproject.toml`), поэтому обычный `pip install .` тоже продолжает работать. При установке в другой проект через Poetry:
+
+```bash
+# В каталоге проекта cusum-optimizer:
+poetry install
+
+# В другом проекте, зависимом от cusum-optimizer:
+poetry add /path/to/cusum-optimizer
+```
+
 **Windows (MSYS2 / MinGW):**
 
 ```bash
@@ -298,6 +322,7 @@ pip install -e .
 ```bash
 # В каталоге проекта cusum-optimizer:
 pip install -e .
+# или для Poetry: poetry install
 
 # В другом проекте:
 pip install /path/to/cusum-optimizer

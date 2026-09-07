@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=64"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=2.0"]
+build-backend = "poetry.core.masonry.api"
 
 [project]
 name = "cusum-optimizer"
@@ -8,7 +8,8 @@ version = "1.0.0"
 description = "Python bindings for the CUSUM ARL optimizer (Monte-Carlo simulation)"
 readme = "README.md"
 requires-python = ">=3.8"
-license = {text = "MIT"}
+license = "MIT"
+dependencies = []
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
@@ -20,8 +21,6 @@ classifiers = [
 [project.scripts]
 cusum = "cusum.__main__:main"
 
-[tool.setuptools.packages.find]
-where = ["python"]
-
-[tool.setuptools.package-data]
-cusum = ["*.so", "*.dylib", "*.dll"]
+[tool.poetry]
+packages = [{ include = "cusum", from = "python" }]
+include = ["python/cusum/*.so", "python/cusum/*.dll", "python/cusum/*.dylib"]
